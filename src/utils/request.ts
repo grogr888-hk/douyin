@@ -115,5 +115,12 @@ export interface ApiResponse<T = any> {
 }
 
 export async function request<T = any>(config: AxiosRequestConfig): Promise<ApiResponse<T>> {
-  
+  return axiosInstance
+    .request<T>(config)
+    .then(({ data }) => {
+      return { success: true, data } as const
+    })
+    .catch((err) => {
+      return { success: false, data: err } as const
+    })
 }
