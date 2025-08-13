@@ -4,23 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite --host",
-    "start": "vite --host",
-    "serve": "vite --host",
+    "dev": "vite",
     "build": "vite build",
-    "test-del-json": "node node/remove-dist-json.js",
-    "build-uni-app": "vite build --mode uni",
-    "build-gp-pages": "vite build --mode gp_pages",
-    "build-gitee-pages": "vite build --mode gitee_pages && pnpm run test-del-json",
-    "build-only": "vite build",
-    "build-check": "run-p type-check \"build-only {@}\" --",
-    "type-check": "vue-tsc --build --force",
-    "report": "vite build",
     "preview": "vite preview",
-    "lint": "eslint  --fix  . --ext .vue,.js,.ts,.tsx,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
-    "format": "prettier --write src/",
-    "prepare": "husky",
-    "commit": "git-cz"
+    "lint": "eslint . --ext .ts,.tsx,.js,.jsx,.vue",
+    "server:dev": "node server/src/app.js"
   },
   "dependencies": {
     "@jambonn/vue-lazyload": "1.0.9",

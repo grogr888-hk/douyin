@@ -51,16 +51,19 @@ function resetVhAndPx() {
   document.documentElement.style.setProperty('--vh', `${vh}px`)
 }
 
-onMounted(() => {
+import { useAuthStore } from '@/store/auth'
+import { useSettingsStore } from '@/store/settings'
+
+onMounted(async () => {
   store.init()
-  settings.init()
   resetVhAndPx()
+  await useSettingsStore().init()
+  await useAuthStore().init()
+  // 监听resize事件 视图大小发生变化就重新计算1vh的值
   window.addEventListener('resize', () => {
     location.href = BASE_URL + '/'
     resetVhAndPx()
   })
-})
-})
 </script>
 
 <style lang="less">

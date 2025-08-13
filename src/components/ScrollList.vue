@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-import { onMounted, reactive } from 'vue'
+import { onMounted, reactive, watch } from 'vue'
 import { _notice } from '@/utils'
 import Scroll from '@/components/Scroll.vue'
 import NoMore from '@/components/NoMore.vue'

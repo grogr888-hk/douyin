@@ -17,7 +17,7 @@
 
 <script setup lang="jsx">
 import SlideVerticalInfinite from '@/components/slide/SlideVerticalInfinite.vue'
-import { onMounted, onUnmounted, reactive, ref } from 'vue'
+import { onMounted, onUnmounted, reactive, ref, watch } from 'vue'
 import bus, { EVENT_KEY } from '@/utils/bus'
 import { useBaseStore } from '@/store/pinia'
 import { slideItemRender } from '@/utils'
