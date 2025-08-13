@@ -45,13 +45,19 @@ router.beforeEach(async (to, from) => {
   if (!authStore.token) {
     await authStore.init()
   }
-  // Only require approval for protected routes
-  if (
-    protectedPrefixes.some((prefix) => to.path.startsWith(prefix)) &&
-    to.path !== '/login' && to.path !== '/admin' &&
-    !authStore.isApproved
-  ) {
-    return { path: '/me' }
+  // Admin guard
+  if (to.path.startsWith('/admin')) {
+    if (!authStore.isLoggedIn || !authStore.user || authStore.user.role !== 'admin') {
+      return { path: '/me' }
+    }
+    return true
+  }
+  if (isProtectedRoute(to) && !authStore.isApproved) {
+    // Not approved, redirect to membership center with notice
+    return {
+      path: '/me',
+      query: { need_approval: 1 }
+    }
   }
   return true
 })

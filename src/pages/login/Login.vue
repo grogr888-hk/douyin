@@ -51,13 +51,12 @@
       </div>
 
       <div class="other-login">
-        <transition name="fade">
-          <div v-if="data.isOtherLogin" class="icons">
-            <img @click="_no" src="../../assets/img/icon/login/toutiao-round.png" alt="" />
-            <img @click="_no" src="../../assets/img/icon/login/qq-round.webp" alt="" />
-            <img @click="_no" src="../../assets/img/icon/login/wechat-round.png" alt="" />
-            <img @click="_no" src="../../assets/img/icon/login/weibo-round.webp" alt="" />
-          </div>
+      <span @click="otherLogin">其他手机号码登录</span>
+    </div>
+    <div class="password-login-link">
+      <span @click="passwordLogin" style="color:#4668e8;cursor:pointer;margin-top:8px;display:inline-block;">使用密码登录</span>
+    </div>
+  </div>
         </transition>
       </div>
       <transition name="fade">
@@ -78,6 +77,10 @@ import Loading from '../../components/Loading.vue'
 import { onMounted, reactive } from 'vue'
 import { useNav } from '@/utils/hooks/useNav'
 import { _no, _sleep } from '@/utils'
+
+function passwordLogin() {
+  nav('/login/password')
+}
 
 defineOptions({
   name: 'login'
