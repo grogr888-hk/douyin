@@ -66,5 +66,13 @@ async function getData(refresh = false) {
   }
 }
 
-onMounted(getData)
+import { useSettingsStore } from '@/store/settings'
+
+onMounted(() => {
+  getData()
+  const settings = useSettingsStore()
+  watch(() => settings.changedAt, () => {
+    getData(true)
+  })
+})
 </script>

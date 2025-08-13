@@ -14,20 +14,21 @@ axiosInstance.interceptors.request.use(
     if (!config.headers['Content-Type']) {
       config.headers['Content-Type'] = 'application/json'
     }
+    // Set Authorization header if token exists
+    if (!config.headers['Authorization']) {
+      try {
+        const t = localStorage.getItem('token')
+        if (t) {
+          config.headers['Authorization'] = 'Bearer ' + t.replace(/"/g, '')
+        }
+      } catch (e) {}
+    }
     return config
   },
   (error) => {
     return Promise.reject(error)
   }
 )
-
-/*
- * 响应拦截器，无论失败或者成功都会返回{ success: boolean, data: xxx }这种类型的数据，没有reject和抛error。
- * 如果有问题，拦截器里会进行提示。在then里面总是会接收到返回值
- * */
-axiosInstance.interceptors.response.use(
-  (response: AxiosResponse) => {
-    // console.log('response',response)
     /*
      * 响应成功的拦截器，主要是对data作处理，如果没有返回data，那么会添加一个data字段，并把response.data的内容合并到data里面，然后返回
      * */

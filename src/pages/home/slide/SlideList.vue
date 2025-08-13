@@ -133,10 +133,16 @@ function togglePlay() {
   })
 }
 
+import { useSettingsStore } from '@/store/settings'
+
 onMounted(() => {
   bus.on(EVENT_KEY.SINGLE_CLICK, click)
   bus.on(EVENT_KEY.UPDATE_ITEM, updateItem)
   bus.on(EVENT_KEY.TOGGLE_CURRENT_VIDEO, togglePlay)
+  const settings = useSettingsStore()
+  watch(() => settings.changedAt, () => {
+    getData(true)
+  })
 })
 onUnmounted(() => {
   bus.off(EVENT_KEY.SINGLE_CLICK, click)
