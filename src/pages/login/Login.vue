@@ -120,7 +120,6 @@ function login() {
     }
   }
 }
-
 function passwordLogin() {
   nav('/login/password')
 }
