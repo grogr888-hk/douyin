@@ -17,7 +17,7 @@
 
 <script setup lang="jsx">
 import SlideVerticalInfinite from '@/components/slide/SlideVerticalInfinite.vue'
-import { onMounted, onUnmounted, reactive, ref } from 'vue'
+import { onMounted, onUnmounted, reactive, ref, watch } from 'vue'
 import bus, { EVENT_KEY } from '@/utils/bus'
 import { useBaseStore } from '@/store/pinia'
 import { slideItemRender } from '@/utils'
@@ -133,10 +133,16 @@ function togglePlay() {
   })
 }
 
+import { useSettingsStore } from '@/store/settings'
+
 onMounted(() => {
   bus.on(EVENT_KEY.SINGLE_CLICK, click)
   bus.on(EVENT_KEY.UPDATE_ITEM, updateItem)
   bus.on(EVENT_KEY.TOGGLE_CURRENT_VIDEO, togglePlay)
+  const settings = useSettingsStore()
+  watch(() => settings.changedAt, () => {
+    getData(true)
+  })
 })
 onUnmounted(() => {
   bus.off(EVENT_KEY.SINGLE_CLICK, click)

@@ -52,6 +52,14 @@
       >
         {{ loading ? '登录中' : '登录' }}
       </dy-button>
+      <div style="margin-top:10px;">
+        <dy-button
+          type="default"
+          :active="false"
+          :disabled="disabled"
+          @click="register"
+        >注册</dy-button>
+      </div>
 
       <div class="options">
         <span>
@@ -63,109 +71,71 @@
     </div>
   </div>
 </template>
-<script>
+<script setup>
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/store/auth'
 import Check from '../../components/Check'
 import LoginInput from './components/LoginInput'
 import Tooltip from './components/Tooltip'
-import Base from './Base'
 
-export default {
-  name: 'PasswordLogin',
-  extends: Base,
-  components: {
-    Check,
-    Tooltip,
-    LoginInput
-  },
-  data() {
-    return {
-      phone: '',
-      password: '',
-      code: '',
-      notice: ''
-    }
-  },
-  computed: {
-    disabled() {
-      return !(this.phone && this.password)
-    }
-  },
-  created() {},
-  methods: {
-    async login() {
-      let res = await this.check()
-      if (res) {
-        this.loading = true
-      }
-    }
+const router = useRouter()
+const auth = useAuthStore()
+const phone = ref('')
+const password = ref('')
+const isAgree = ref(false)
+const disabled = ref(false)
+const loading = ref(false)
+const notice = ref('')
+const showAnim = ref(false)
+const showTooltip = ref(false)
+
+function validatePhone(phone) {
+  return /^1\d{10}$/.test(phone)
+}
+
+async function login() {
+  notice.value = ''
+  if (!validatePhone(phone.value)) {
+    notice.value = '请输入正确的手机号'
+    return
+  }
+  if (!isAgree.value || disabled.value) return
+  loading.value = true
+  disabled.value = true
+  const res = await auth.login({ username: phone.value, password: password.value })
+  loading.value = false
+  disabled.value = false
+  if (res.success && auth.user && auth.user.status === 'approved') {
+    router.push('/')
+  } else if (res.code === 403 && res.msg && res.msg.includes('待审核')) {
+    notice.value = '账号待审核，请等待管理员审批'
+  } else if (res.msg) {
+    notice.value = res.msg
+  } else {
+    notice.value = '登录失败'
+  }
+}
+
+async function register() {
+  notice.value = ''
+  if (!validatePhone(phone.value)) {
+    notice.value = '请输入正确的手机号'
+    return
+  }
+  if (!isAgree.value || disabled.value) return
+  loading.value = true
+  disabled.value = true
+  const res = await auth.register({ username: phone.value, password: password.value })
+  loading.value = false
+  disabled.value = false
+  if (res.success) {
+    notice.value = '注册成功，待管理员审核'
+    router.push('/me')
+  } else if (res.msg) {
+    notice.value = res.msg
+  } else {
+    notice.value = '注册失败'
   }
 }
 </script>
-
-<style scoped lang="less">
-@import '../../assets/less/index';
-@import 'Base.less';
-
-.PasswordLogin {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  top: 0;
-  overflow: auto;
-  color: black;
-  font-size: 14rem;
-  background: white;
-
-  .content {
-    padding: 60rem 30rem;
-
-    .desc {
-      margin-bottom: 60rem;
-      margin-top: 120rem;
-      display: flex;
-      align-items: center;
-      flex-direction: column;
-
-      .title {
-        margin-bottom: 20rem;
-        font-size: 20rem;
-      }
-
-      .phone-number {
-        letter-spacing: 3rem;
-        font-size: 30rem;
-        margin-bottom: 10rem;
-      }
-
-      .sub-title {
-        font-size: 12rem;
-        color: var(--second-text-color);
-      }
-    }
-
-    .button {
-      width: 100%;
-      margin-bottom: 5rem;
-    }
-
-    .protocol {
-      position: relative;
-      color: gray;
-      margin-top: 20rem;
-      font-size: 12rem;
-      display: flex;
-
-      .left {
-        padding-top: 1rem;
-        margin-right: 5rem;
-      }
-    }
-    .options {
-      position: relative;
-      font-size: 14rem;
-      display: flex;
-    }
-  }
-}
-</style>

@@ -1,33 +1,20 @@
 import { request } from '@/utils/request'
+import { useSettingsStore } from '@/store/settings'
 
-export function historyOther(params?: any, data?: any) {
-  return request({ url: '/video/historyOther', method: 'get', params, data })
+export async function recommendedVideo(params = {}) {
+  const settings = useSettingsStore()
+  const { start = 0, pageSize = 10 } = params
+  const pg = Math.floor(start / pageSize) + 1
+  const query = {
+    ac: 'list',
+    pg,
+    sourceId: settings.selectedSourceId,
+    t: settings.category
+  }
+  const res = await request({ url: '/proxy/vod', method: 'get', params: query })
+  return res
 }
 
-export function historyVideo(params?: any, data?: any) {
-  return request({ url: '/video/history', method: 'get', params, data })
-}
-
-export function recommendedVideo(params?: any, data?: any) {
-  return request({ url: '/video/recommended', method: 'get', params, data })
-}
-
-export function recommendedLongVideo(params?: any, data?: any) {
-  return request({ url: '/video/long/recommended/', method: 'get', params, data })
-}
-
-export function myVideo(params?: any, data?: any) {
-  return request({ url: '/video/my', method: 'get', params, data })
-}
-
-export function privateVideo(params?: any, data?: any) {
-  return request({ url: '/video/private', method: 'get', params, data })
-}
-
-export function likeVideo(params?: any, data?: any) {
-  return request({ url: '/video/like', method: 'get', params, data })
-}
-
-export function videoComments(params?: any, data?: any) {
-  return request({ url: '/video/comments', method: 'get', params, data })
+export async function recommendedLongVideo(params = {}) {
+  return recommendedVideo(params)
 }
