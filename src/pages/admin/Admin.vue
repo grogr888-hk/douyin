@@ -120,7 +120,7 @@ async function saveSource(s) {
   await updateSource(s.id, s)
   fetchSources()
 }
-async function deleteSourceFn(id) {
+async function deleteSource(id) {
   await deleteSource(id)
   fetchSources()
 }
@@ -145,8 +145,6 @@ onMounted(() => {
   fetchSources()
   fetchSettings()
 })
-
-const deleteSource = deleteSourceFn
 </script>
 <style scoped>
 .admin-console {
