@@ -1,9 +1,9 @@
-<h1 align="center">
-  Douyin-Vue
-</h1>
+<!--- Docker 一键部署（追加） --->
 
-<p align="center">
- <a href="docs/README.en.md">English</a> | <a href="docs/README.es.md">Spanish</a> | <a href="docs/README.de.md">German</a> | 
+## Docker 一键部署
+
+### 前置条件
+- 放行服务器 80 端口（="docs/README.en.md">English</a> | <a href="docs/README.es.md">Spanish</a> | <a href="docs/README.de.md">German</a> | 
 <a href="docs/README.fr.md">French</a> | <a href="README.md">简体中文</a> |  <a href="docs/README.ja.md">日本語</a> 
 </p>
 
@@ -122,3 +122,46 @@ npm run dev
 ## 许可协议
 
 [GPL](LICENSE)
+
+---
+
+## Docker 一键部署
+
+### 前置准备
+
+- 开放服务器 80 端口（或自行调整端口映射）。
+- 如果宿主机已有 Nginx 占用 80，请将 docker-compose.yml 中的 `80:80` 改为 `8080:80` 并在外部 Nginx 做反向代理。
+- 如需自定义 JWT 密钥，可以提前编辑 .env 或在首次启动时输入。
+
+### 启动服务
+
+```bash
+# 赋予脚本可执行权限
+chmod +x scripts/docker-*.sh
+
+# 一键启动（首次会提示设置 JWT_SECRET）
+bash scripts/docker-up.sh
+```
+
+- 启动后访问：http://你的服务器IP 或域名
+
+### 更新服务
+
+```bash
+bash scripts/docker-rebuild.sh
+```
+
+### 停止服务
+
+```bash
+bash scripts/docker-down.sh
+```
+
+### 说明
+
+- 默认管理员账号：admin / admin123（强烈建议上线后修改密码）
+- SQLite 数据持久化目录：./server/data
+- 若需 HTTPS，推荐在宿主机（aaPanel/Nginx）配置 SSL 后反代到 web 容器
+- 前端 /api 请求将自动转发到后端容器
+
+```

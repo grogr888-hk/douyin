@@ -78,10 +78,6 @@ import { onMounted, reactive } from 'vue'
 import { useNav } from '@/utils/hooks/useNav'
 import { _no, _sleep } from '@/utils'
 
-function passwordLogin() {
-  nav('/login/password')
-}
-
 defineOptions({
   name: 'login'
 })
