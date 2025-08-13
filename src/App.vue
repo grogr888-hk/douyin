@@ -15,6 +15,7 @@ import Call from './components/Call.vue'
 import SourceSwitcher from './components/SourceSwitcher.vue'
 import { useBaseStore } from '@/store/pinia.js'
 import { useSettingsStore } from '@/store/settings'
+import { useAuthStore } from '@/store/auth'
 import { onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
@@ -23,14 +24,16 @@ import { BASE_URL } from '@/config'
 
 const store = useBaseStore()
 const settings = useSettingsStore()
+const auth = useAuthStore()
 const route = useRoute()
 const transitionName = ref('go')
 
+// 页面路由切换动画
 watch(
   () => route.path,
   (to, from) => {
     store.setMaskDialog({ state: false, mode: store.maskDialogMode })
-    let noAnimation = [
+    const noAnimation = [
       '/',
       '/home',
       '/me',
@@ -38,7 +41,8 @@ watch(
       '/test'
     ]
     if (noAnimation.indexOf(from) !== -1 && noAnimation.indexOf(to) !== -1) {
-      return (transitionName.value = '')
+      transitionName.value = ''
+      return
     }
     const toDepth = routes.findIndex((v: RouteRecordRaw) => v.path === to)
     const fromDepth = routes.findIndex((v: RouteRecordRaw) => v.path === from)
@@ -51,19 +55,16 @@ function resetVhAndPx() {
   document.documentElement.style.setProperty('--vh', `${vh}px`)
 }
 
-import { useAuthStore } from '@/store/auth'
-import { useSettingsStore } from '@/store/settings'
-
 onMounted(async () => {
   store.init()
+  await settings.init()
+  await auth.init()
   resetVhAndPx()
-  await useSettingsStore().init()
-  await useAuthStore().init()
-  // 监听resize事件 视图大小发生变化就重新计算1vh的值
   window.addEventListener('resize', () => {
     location.href = BASE_URL + '/'
     resetVhAndPx()
   })
+})
 </script>
 
 <style lang="less">

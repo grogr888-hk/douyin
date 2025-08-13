@@ -120,6 +120,10 @@ function login() {
     }
   }
 }
+
+function passwordLogin() {
+  nav('/login/password')
+}
 </script>
 
 <style scoped lang="less">

@@ -1,3 +1,6 @@
-#!/usr/bin/env bashset -e
-cd "$(dirname "$0")/.."docker compose build --no-cache
-docker compose up -decho "已重新构建并
+#!/usr/bin/env bash
+set -e
+cd "$(dirname "$0")/.."
+docker compose build --no-cache
+docker compose up -d
+echo "已重新构建并启动"
